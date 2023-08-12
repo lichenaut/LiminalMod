@@ -1,0 +1,4 @@
+name: LiminalMod
+version: '${project.version}'
+main: com.lichenaut.liminalmod.LiminalMod
+api-version: '1.19'

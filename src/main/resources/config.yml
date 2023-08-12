@@ -1,0 +1,78 @@
+#Turn StructureNerfer off.
+disable-plugin: false
+
+
+#################
+#Nerf Structures#
+#################
+
+#Note: read the README for information on how to use this file: (link)
+
+#Example:
+#village-plains:
+#  spawn-rate: 50
+#  abandoned-rate: 75
+#  loot-abandon-rate: 50
+
+#any unsupplied values go to 0
+
+structures:
+  ANCIENT_CITY:
+  BASTION_REMNANT:
+  BURIED_TREASURE:
+  DESERT_PYRAMID:
+  END_CITY:
+  FORTRESS:
+  IGLOO:
+  JUNGLE_PYRAMID:
+  MANSION:
+  MINESHAFT:
+  MINESHAFT_MESA:
+  MONUMENT:
+  NETHER_FOSSIL:
+  OCEAN_RUIN_COLD:
+  OCEAN_RUIN_WARM:
+  PILLAGER_OUTPOST:
+  RUINED_PORTAL:
+  RUINED_PORTAL_DESERT:
+  RUINED_PORTAL_JUNGLE:
+  RUINED_PORTAL_MOUNTAIN:
+  RUINED_PORTAL_NETHER:
+  RUINED_PORTAL_OCEAN:
+  RUINED_PORTAL_SWAMP:
+  SHIPWRECK:
+  SHIPWRECK_BEACHED:
+  STRONGHOLD:
+  SWAMP_HUT:
+  TRAIL_RUINS:
+  VILLAGE_DESERT:
+  VILLAGE_PLAINS:
+  VILLAGE_SAVANNA:
+  VILLAGE_SNOWY:
+  VILLAGE_TAIGA:
+
+
+################
+#Miscellaneous##
+################
+
+#The multiplier for pillager patrol spawns.
+patrol-spawn-rate: 100
+
+#The multiplier for piglin spawns.
+  #Does not change the piglin count limit, only changes the rate at which the count grows.
+piglin-spawn-rate: 100
+
+#The maximum amount of piglins that can spawn per player.
+  #Set to -1 to disable.
+  #Consider instead editing spawn limits, spawn ranges, and spawn timings in your server's files,
+    #as this is more efficient. "bukkit.yml", "spigot.yml", and "paper.yml", etc...
+piglin-per-player-limit: -1
+
+#The multiplier for wandering trader spawns.
+wandering-trader-spawn-rate: 100
+
+
+
+
+#worlds this applies to??
