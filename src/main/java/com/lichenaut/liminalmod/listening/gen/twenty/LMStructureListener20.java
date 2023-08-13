@@ -11,11 +11,11 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.AsyncStructureSpawnEvent;
 import org.bukkit.generator.structure.Structure;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.BoundingBox;
 
@@ -58,14 +58,14 @@ public class LMStructureListener20 extends LMListenerUtil implements Listener {
         int maxZ = Math.max(z1, z2);
 
         boolean abandoned = chance(structureSection.getInt("abandoned-rate"));
-        if (abandoned && villages.contains(structure)) {//depends on config, but checking for abandoned will usually fail faster
+        if (abandoned && villages.contains(structure)) {// Depends on config, but checking for abandoned will usually fail faster
             for (int x = minX; x <= maxX; x++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    w.getChunkAt(x, z).load();//load structure chunks so that the village won't be half-abandoned
+                    w.getChunkAt(x, z).load();// Load structure chunks so that the village won't be half-abandoned
                 }
             }
 
-            Bukkit.getScheduler().runTaskLater((Plugin) this, new Runnable() {//abandon village after a second
+            Bukkit.getScheduler().runTaskLater((Plugin) this, new Runnable() {// Abandon village after event completion
                 @Override
                 public void run() {abandonVillage(w, box);}
             }, 20L);
@@ -83,6 +83,19 @@ public class LMStructureListener20 extends LMListenerUtil implements Listener {
             for (int y = (int) box.getMinY(); y <= (int) box.getMaxY()+1; y++) {
                 for (int z = (int) box.getMinZ(); z <= (int) box.getMaxZ()+1; z++) {
                     Block block = w.getBlockAt(x, y, z);
+                    switch (block.getType()) {
+                        case TORCH:
+                        case OAK_DOOR:
+                        case JUNGLE_DOOR:
+                        case ACACIA_DOOR:
+                        case SPRUCE_DOOR:
+                            block.setType(Material.AIR);
+                            break;
+                        case COBBLESTONE:
+                            if (chance(75)) block.setType(Material.MOSSY_COBBLESTONE);
+                            break;
+                            // TODO: Add more blocks
+                    }
                     if (block.getType() == Material.TORCH || block.getType().toString().contains("DOOR")) {
                         block.setType(Material.AIR);
                     }
@@ -95,10 +108,7 @@ public class LMStructureListener20 extends LMListenerUtil implements Listener {
             if (type == EntityType.IRON_GOLEM) {
                 entity.remove();
             } else if (type == EntityType.VILLAGER) {
-                entity.remove();
-                Entity zombie = w.spawnEntity(entity.getLocation(), EntityType.ZOMBIE_VILLAGER);
-                zombie.isPersistent();
-                zombie.setMetadata("abandoned", new FixedMetadataValue(plugin, true));
+                infectVillager(w, (Villager) entity);
             }
         }
     }

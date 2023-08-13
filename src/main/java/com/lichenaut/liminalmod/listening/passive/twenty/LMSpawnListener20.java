@@ -19,7 +19,7 @@ import java.util.HashSet;
 
 public class LMSpawnListener20 extends LMListenerUtil implements Listener {
 
-    private HashSet<BoundingBox> noPatrolBoxes = new HashSet<>();
+    private final HashSet<BoundingBox> noPatrolBoxes = new HashSet<>();
 
     public LMSpawnListener20(LiminalMod plugin) {super(plugin);}
 
@@ -58,7 +58,7 @@ public class LMSpawnListener20 extends LMListenerUtil implements Listener {
         }
     }
 
-    public void createNoPatrolBox(Location l) {//create a bounding box around location (radius 32) and temporarily add to noPatrolBoxes for 10 seconds
+    public void createNoPatrolBox(Location l) {// Create a bounding box around location (radius 32) and temporarily add to noPatrolBoxes for 10 seconds
         BoundingBox box = new BoundingBox(l.getX() - 32, l.getY() - 32, l.getZ() - 32, l.getX() + 32, l.getY() + 32, l.getZ() + 32);
         noPatrolBoxes.add(box);
 
@@ -68,8 +68,8 @@ public class LMSpawnListener20 extends LMListenerUtil implements Listener {
         }, 200L);
     }
 
-    public boolean partOfCancelledPatrol(Location l) {//check if location is within any of the bounding boxes in noPatrolBoxes
-        for (BoundingBox box : noPatrolBoxes) {//a small number of bounding boxes is typical, which means O(n) is fine (no chunk hashmap creation/other data structures)
+    public boolean partOfCancelledPatrol(Location l) {// Check if location is within any of the bounding boxes in noPatrolBoxes
+        for (BoundingBox box : noPatrolBoxes) {// A small number of bounding boxes is typical, which means O(n) is fine (no chunk hashmap creation/other data structures)
             if (box.contains(l.getX(), l.getY(), l.getZ())) return true;
         }
         return false;

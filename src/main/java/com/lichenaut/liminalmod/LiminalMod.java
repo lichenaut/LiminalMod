@@ -17,7 +17,7 @@ public final class LiminalMod extends JavaPlugin {
     private final Logger log = getLogger();
     private final Configuration config = getConfig();
     private int versionInt;
-    private HashMap<Chunk, HashSet<LMStructure>> structureChunks = new HashMap<>();//one chunk can have multiple structures
+    private final HashMap<Chunk, HashSet<LMStructure>> structureChunks = new HashMap<>();//one chunk can have multiple structures
 
     @Override
     public void onEnable() {
