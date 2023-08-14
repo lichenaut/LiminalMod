@@ -65,10 +65,7 @@ public class LMStructureListener20 extends LMListenerUtil implements Listener {
                 }
             }
 
-            Bukkit.getScheduler().runTaskLater((Plugin) this, new Runnable() {// Abandon village after event completion
-                @Override
-                public void run() {abandonVillage(w, box);}
-            }, 20L);
+            Bukkit.getScheduler().runTaskLater((Plugin) this, () -> abandonVillage(w, box), 20L); // Abandon village after this event's completion
         }
 
         for (int x = minX; x <= maxX; x++) {
@@ -78,7 +75,7 @@ public class LMStructureListener20 extends LMListenerUtil implements Listener {
         }
     }
 
-    public void abandonVillage(World w, BoundingBox box) {
+    public void abandonVillage(World w, BoundingBox box) {// Manually abandon the village, as changing the structure type through the AsyncStructureSpawnEvent is not possible
         for (int x = (int) box.getMinX(); x <= (int) box.getMaxX()+1; x++) {
             for (int y = (int) box.getMinY(); y <= (int) box.getMaxY()+1; y++) {
                 for (int z = (int) box.getMinZ(); z <= (int) box.getMaxZ()+1; z++) {
@@ -92,24 +89,45 @@ public class LMStructureListener20 extends LMListenerUtil implements Listener {
                             block.setType(Material.AIR);
                             break;
                         case COBBLESTONE:
-                            if (chance(75)) block.setType(Material.MOSSY_COBBLESTONE);
+                            if (chance(75)) {
+                                block.setType(Material.MOSSY_COBBLESTONE);
+                                break;
+                            }
+                        case OAK_LOG:
+                        case STRIPPED_OAK_LOG:
+                        case OAK_PLANKS:
+                        case OAK_STAIRS:
+                        case OAK_FENCE:
+                        case SANDSTONE:
+                        case SMOOTH_SANDSTONE:
+                        case CUT_SANDSTONE:
+                        case SANDSTONE_STAIRS:
+                        case SANDSTONE_SLAB:
+                        case ORANGE_TERRACOTTA:
+                        case ACACIA_LOG:
+                        case STRIPPED_ACACIA_LOG:
+                        case ACACIA_PLANKS:
+                        case ACACIA_STAIRS:
+                        case ACACIA_FENCE:
+                        case SPRUCE_LOG:
+                        case STRIPPED_SPRUCE_LOG:
+                        case SPRUCE_PLANKS:
+                        case SPRUCE_STAIRS:
+                        case SPRUCE_FENCE:
+                            if (chance(10)) block.setType(Material.COBWEB);
                             break;
-                            // TODO: Add more blocks
-                    }
-                    if (block.getType() == Material.TORCH || block.getType().toString().contains("DOOR")) {
-                        block.setType(Material.AIR);
+                        case GLASS_PANE:
+                            block.setType(Material.BROWN_STAINED_GLASS_PANE);
+                            break;
                     }
                 }
             }
         }
 
-        for (Entity entity : w.getNearbyEntities(box)) {
+        for (Entity entity : w.getNearbyEntities(box)) {// Remove all Iron Golems, infect all Villagers
             EntityType type = entity.getType();
-            if (type == EntityType.IRON_GOLEM) {
-                entity.remove();
-            } else if (type == EntityType.VILLAGER) {
-                infectVillager(w, (Villager) entity);
-            }
+            if (type == EntityType.IRON_GOLEM) entity.remove();
+            else if (type == EntityType.VILLAGER) infectVillager(w, (Villager) entity);
         }
     }
 }

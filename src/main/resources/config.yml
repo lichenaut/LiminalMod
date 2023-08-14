@@ -56,20 +56,15 @@ structures:
 #Miscellaneous##
 ################
 
-#The multiplier for pillager patrol spawns.
+#Set patrol spawn rate.
 patrol-spawn-rate: 100
 
-#The multiplier for piglin spawns.
+#Set Piglin spawn rate.
   #Does not change the piglin count limit, only changes the rate at which the count grows.
 piglin-spawn-rate: 100
+  #Consider also editing spawn limits, spawn ranges, and spawn timings in your server's files: "bukkit.yml", "spigot.yml", and "paper.yml", etc...
 
-#The maximum amount of piglins that can spawn per player.
-  #Set to -1 to disable.
-  #Consider instead editing spawn limits, spawn ranges, and spawn timings in your server's files,
-    #as this is more efficient. "bukkit.yml", "spigot.yml", and "paper.yml", etc...
-piglin-per-player-limit: -1
-
-#The multiplier for wandering trader spawns.
+#Wandering Trader spawn rate.
 wandering-trader-spawn-rate: 100
 
 
