@@ -8,26 +8,36 @@ import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
+import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.AsyncStructureSpawnEvent;
 import org.bukkit.generator.structure.Structure;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 
 public class LMStructureListener20 extends LMListenerUtil implements Listener {
 
+    private final HashSet<Structure> notLootable = new HashSet<>(3);
     private final HashSet<Structure> villages = new HashSet<>(5);
 
     public LMStructureListener20(LiminalMod plugin) {
         super(plugin);
+        notLootable.add(Structure.MONUMENT);
+        notLootable.add(Structure.NETHER_FOSSIL);
+        notLootable.add(Structure.SWAMP_HUT);
         villages.add(Structure.VILLAGE_DESERT);
         villages.add(Structure.VILLAGE_PLAINS);
         villages.add(Structure.VILLAGE_SAVANNA);
@@ -58,14 +68,15 @@ public class LMStructureListener20 extends LMListenerUtil implements Listener {
         int maxZ = Math.max(z1, z2);
 
         boolean abandoned = chance(structureSection.getInt("abandoned-rate"));
-        if (abandoned && villages.contains(structure)) {// Depends on config, but checking for abandoned will usually fail faster
+        if (abandoned) {
             for (int x = minX; x <= maxX; x++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    w.getChunkAt(x, z).load();// Load structure chunks so that the village won't be half-abandoned
+                    w.getChunkAt(x, z).load();// Load structure chunks so that the whole structure has changes applied to it
                 }
             }
 
-            Bukkit.getScheduler().runTaskLater((Plugin) this, () -> abandonVillage(w, box), 20L); // Abandon village after this event's completion
+            if (villages.contains(structure)) Bukkit.getScheduler().runTaskLater(plugin, () -> abandonVillage(w, box), 20L); // Abandon village after this event's completion
+            if (!notLootable.contains(structure)) Bukkit.getScheduler().runTaskLater(plugin, () -> nerfLoot(w, box, structureSection), 20L); // Nerf loot after this event's completion
         }
 
         for (int x = minX; x <= maxX; x++) {
@@ -81,39 +92,37 @@ public class LMStructureListener20 extends LMListenerUtil implements Listener {
                 for (int z = (int) box.getMinZ(); z <= (int) box.getMaxZ()+1; z++) {
                     Block block = w.getBlockAt(x, y, z);
                     switch (block.getType()) {
-                        case TORCH:
-                        case OAK_DOOR:
-                        case JUNGLE_DOOR:
                         case ACACIA_DOOR:
+                        case JUNGLE_DOOR:
+                        case OAK_DOOR:
                         case SPRUCE_DOOR:
+                        case TORCH:
                             block.setType(Material.AIR);
                             break;
                         case COBBLESTONE:
-                            if (chance(75)) {
-                                block.setType(Material.MOSSY_COBBLESTONE);
-                                break;
-                            }
-                        case OAK_LOG:
-                        case STRIPPED_OAK_LOG:
-                        case OAK_PLANKS:
-                        case OAK_STAIRS:
-                        case OAK_FENCE:
-                        case SANDSTONE:
-                        case SMOOTH_SANDSTONE:
-                        case CUT_SANDSTONE:
-                        case SANDSTONE_STAIRS:
-                        case SANDSTONE_SLAB:
-                        case ORANGE_TERRACOTTA:
+                            if (chance(75)) block.setType(Material.MOSSY_COBBLESTONE);
+                            break;
+                        case ACACIA_FENCE:
                         case ACACIA_LOG:
-                        case STRIPPED_ACACIA_LOG:
                         case ACACIA_PLANKS:
                         case ACACIA_STAIRS:
-                        case ACACIA_FENCE:
+                        case CUT_SANDSTONE:
+                        case OAK_FENCE:
+                        case OAK_LOG:
+                        case OAK_PLANKS:
+                        case OAK_STAIRS:
+                        case ORANGE_TERRACOTTA:
+                        case SANDSTONE:
+                        case SANDSTONE_SLAB:
+                        case SANDSTONE_STAIRS:
+                        case SMOOTH_SANDSTONE:
+                        case SPRUCE_FENCE:
                         case SPRUCE_LOG:
-                        case STRIPPED_SPRUCE_LOG:
                         case SPRUCE_PLANKS:
                         case SPRUCE_STAIRS:
-                        case SPRUCE_FENCE:
+                        case STRIPPED_ACACIA_LOG:
+                        case STRIPPED_OAK_LOG:
+                        case STRIPPED_SPRUCE_LOG:
                             if (chance(10)) block.setType(Material.COBWEB);
                             break;
                         case GLASS_PANE:
@@ -128,6 +137,38 @@ public class LMStructureListener20 extends LMListenerUtil implements Listener {
             EntityType type = entity.getType();
             if (type == EntityType.IRON_GOLEM) entity.remove();
             else if (type == EntityType.VILLAGER) infectVillager(w, (Villager) entity);
+        }
+    }
+
+    public void nerfLoot(World w, BoundingBox box, ConfigurationSection structureSection) {
+        for (int x = (int) box.getMinX(); x <= (int) box.getMaxX()+1; x++) {
+            for (int y = (int) box.getMinY(); y <= (int) box.getMaxY()+1; y++) {
+                for (int z = (int) box.getMinZ(); z <= (int) box.getMaxZ()+1; z++) {
+                    Block block = w.getBlockAt(x, y, z);
+                    Material type = block.getType();
+                    if (type == Material.CHEST || type == Material.CHEST_MINECART) {
+                        Inventory inv = null;
+                        BlockState state = block.getState();
+                        if (state instanceof Chest) {
+                            Chest chest = (Chest) state;
+                            inv = chest.getInventory();
+                        } else if (state instanceof StorageMinecart) {
+                            StorageMinecart minecartChest = (StorageMinecart) state;
+                            inv = minecartChest.getInventory();
+                        }
+
+                        if (inv == null) return;
+
+                        List<ItemStack> items = new ArrayList<>();
+                        for (ItemStack item : inv.getContents()) {
+                            if (item != null) items.add(item);
+                        }
+
+                        int remove = (int) Math.round(items.size() * (structureSection.getInt("loot-multiplier") / 100.0));
+                        for (int i = 0; i < remove; i++) inv.remove(items.get(i));
+                    }
+                }
+            }
         }
     }
 }
