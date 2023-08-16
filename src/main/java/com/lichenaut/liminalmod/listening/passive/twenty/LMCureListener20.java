@@ -6,14 +6,15 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.ZombieVillager;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTransformEvent;
 
-public class LMCureListener extends LMListenerUtil implements Listener {
+public class LMCureListener20 extends LMListenerUtil implements Listener {
 
-    public LMCureListener(LiminalMod plugin) {super(plugin);}
+    public LMCureListener20(LiminalMod plugin) {super(plugin);}
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onVillagerCure(EntityTransformEvent e) {
         if (e.getTransformReason() == EntityTransformEvent.TransformReason.CURED && e.getTransformedEntity().getType() == EntityType.VILLAGER && e.getEntityType() == EntityType.ZOMBIE_VILLAGER) {
             ZombieVillager zombieVillager = (ZombieVillager) e.getEntity();

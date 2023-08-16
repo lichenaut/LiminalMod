@@ -8,6 +8,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.generator.structure.Structure;
@@ -22,7 +23,7 @@ public class LMSpawnListener20 extends LMListenerUtil implements Listener {
 
     public LMSpawnListener20(LiminalMod plugin) {super(plugin);}
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onCreatureSpawnEvent(CreatureSpawnEvent e) {
         CreatureSpawnEvent.SpawnReason spawnReason = e.getSpawnReason();
         if (!(spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || spawnReason == CreatureSpawnEvent.SpawnReason.PATROL)) return;
@@ -99,7 +100,7 @@ public class LMSpawnListener20 extends LMListenerUtil implements Listener {
         if (chunkStructures == null || chunkStructures.isEmpty()) return false;
 
         for (LMStructure lmStructure : chunkStructures) {
-            if (lmStructure.getStructureType().equals(relevantStructure) && lmStructure.getAbandoned()) return true;
+            if (lmStructure.getStructure().equals(relevantStructure) && lmStructure.isAbandoned()) return true;
         }
 
         return false;
@@ -111,7 +112,7 @@ public class LMSpawnListener20 extends LMListenerUtil implements Listener {
         HashSet<Structure> relevantStructures = new HashSet<>(Arrays.asList(relevantStructure));
 
         for (LMStructure lmStructure : chunkStructures) {
-            if (relevantStructures.contains(lmStructure.getStructureType()) && lmStructure.getAbandoned()) return true;
+            if (relevantStructures.contains(lmStructure.getStructure()) && lmStructure.isAbandoned()) return true;
         }
 
         return false;

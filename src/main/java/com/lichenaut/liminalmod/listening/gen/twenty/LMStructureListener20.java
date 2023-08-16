@@ -2,6 +2,7 @@ package com.lichenaut.liminalmod.listening.gen.twenty;
 
 import com.lichenaut.liminalmod.LiminalMod;
 import com.lichenaut.liminalmod.load.LMStructure;
+import com.lichenaut.liminalmod.load.LMStructureProperties;
 import com.lichenaut.liminalmod.util.LMListenerUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -16,6 +17,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.minecart.StorageMinecart;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.AsyncStructureSpawnEvent;
 import org.bukkit.generator.structure.Structure;
@@ -24,12 +26,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.BoundingBox;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
 
 public class LMStructureListener20 extends LMListenerUtil implements Listener {
 
+    private final HashMap<Structure, LMStructureProperties> structureProperties = new HashMap<>();
     private final HashSet<Structure> notLootable = new HashSet<>(3);
     private final HashSet<Structure> villages = new HashSet<>(5);
 
@@ -43,16 +47,22 @@ public class LMStructureListener20 extends LMListenerUtil implements Listener {
         villages.add(Structure.VILLAGE_SAVANNA);
         villages.add(Structure.VILLAGE_SNOWY);
         villages.add(Structure.VILLAGE_TAIGA);
+
+        ConfigurationSection structuresSection = plugin.getConfig().getConfigurationSection("structures");
+        if (structuresSection == null) return;
+        for (String structure : structuresSection.getKeys(false)) {
+            ConfigurationSection structureSection = structuresSection.getConfigurationSection(structure);
+            if (structureSection == null) continue;
+            structureProperties.put(getStructureByName(structure), new LMStructureProperties(structureSection.getInt("spawn-rate"), structureSection.getInt("abandoned-rate"), structureSection.getInt("loot-abandon-rate")));
+        }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onStructureSpawn(AsyncStructureSpawnEvent e) {
-        ConfigurationSection structures = plugin.getConfig().getConfigurationSection("structures");
-        if (structures == null) return;
         Structure structure = e.getStructure();
-        ConfigurationSection structureSection = structures.getConfigurationSection(structure.getStructureType().toString());
-        if (structureSection == null) return;
-        if (chance(structureSection.getInt("spawn-rate"))) {e.setCancelled(true); return;}
+        if (!structureProperties.containsKey(structure)) return;
+
+        if (chance(structureProperties.get(structure).getSpawnRate())) {e.setCancelled(true); return;}
 
         World w = e.getWorld();
         BoundingBox box = e.getBoundingBox();
@@ -67,16 +77,16 @@ public class LMStructureListener20 extends LMListenerUtil implements Listener {
         int maxX = Math.max(x1, x2);
         int maxZ = Math.max(z1, z2);
 
-        boolean abandoned = chance(structureSection.getInt("abandoned-rate"));
+        boolean abandoned = chance(structureProperties.get(structure).getAbandonedRate());
         if (abandoned) {
             for (int x = minX; x <= maxX; x++) {
                 for (int z = minZ; z <= maxZ; z++) {
-                    w.getChunkAt(x, z).load();// Load structure chunks so that the whole structure has changes applied to it
+                    w.getChunkAt(x, z).load();// Load structure chunks so that the whole structure has up to two of the following changes applied to it
                 }
             }
 
             if (villages.contains(structure)) Bukkit.getScheduler().runTaskLater(plugin, () -> abandonVillage(w, box), 20L); // Abandon village after this event's completion
-            if (!notLootable.contains(structure)) Bukkit.getScheduler().runTaskLater(plugin, () -> nerfLoot(w, box, structureSection), 20L); // Nerf loot after this event's completion
+            if (!notLootable.contains(structure)) Bukkit.getScheduler().runTaskLater(plugin, () -> nerfLoot(w, box, structureProperties.get(structure).getAbandonLootRate()), 20L); // Nerf loot after this event's completion
         }
 
         for (int x = minX; x <= maxX; x++) {
@@ -140,7 +150,7 @@ public class LMStructureListener20 extends LMListenerUtil implements Listener {
         }
     }
 
-    public void nerfLoot(World w, BoundingBox box, ConfigurationSection structureSection) {
+    public void nerfLoot(World w, BoundingBox box, int abandonLootRate) {
         for (int x = (int) box.getMinX(); x <= (int) box.getMaxX()+1; x++) {
             for (int y = (int) box.getMinY(); y <= (int) box.getMaxY()+1; y++) {
                 for (int z = (int) box.getMinZ(); z <= (int) box.getMaxZ()+1; z++) {
@@ -164,8 +174,8 @@ public class LMStructureListener20 extends LMListenerUtil implements Listener {
                             if (item != null) items.add(item);
                         }
 
-                        int remove = (int) Math.round(items.size() * (structureSection.getInt("loot-multiplier") / 100.0));
-                        for (int i = 0; i < remove; i++) inv.remove(items.get(i));
+                        int remove = (int) Math.round(items.size() * (abandonLootRate / 100.0));
+                        for (int i = 0; i < remove; i++) inv.remove(items.get(i)); // TODO: Does this visually look good? Does that matter?
                     }
                 }
             }

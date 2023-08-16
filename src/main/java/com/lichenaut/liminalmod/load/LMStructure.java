@@ -2,7 +2,9 @@ package com.lichenaut.liminalmod.load;
 
 import org.bukkit.generator.structure.Structure;
 
-public class LMStructure {
+import java.io.Serializable;
+
+public class LMStructure implements Serializable {
 
     private final Structure structure;
     private final boolean abandoned;
@@ -12,6 +14,6 @@ public class LMStructure {
         this.abandoned = abandoned;
     }
 
-    public Structure getStructureType() {return structure;}
-    public boolean getAbandoned() {return abandoned;}
+    public Structure getStructure() {return structure;}
+    public boolean isAbandoned() {return abandoned;}
 }

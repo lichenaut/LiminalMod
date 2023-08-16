@@ -8,6 +8,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent;
 
@@ -20,7 +21,7 @@ public class LMTargetListener20 extends LMListenerUtil implements Listener {
 
     public LMTargetListener20(LiminalMod plugin) {super(plugin);}
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onZombieVillagerTarget(EntityTargetEvent e) {//Zombie Villagers in normal abandoned villages will not endanger themselves to attack.
         Entity entity = e.getEntity();
 

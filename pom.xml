@@ -23,8 +23,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>9</source>
+                    <target>9</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -36,6 +36,10 @@
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>com.lichenaut.liminalmod</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.google.flatbuffers</pattern>
+                            <shadedPattern>com.lichenaut.liminalmod.shaded.flatbuffers</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -84,6 +88,11 @@
             <artifactId>bstats-bukkit</artifactId>
             <version>3.0.2</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.flatbuffers</groupId>
+            <artifactId>flatbuffers-java</artifactId>
+            <version>23.5.26</version>
         </dependency>
     </dependencies>
 </project>
