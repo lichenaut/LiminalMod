@@ -13,5 +13,5 @@ public class LMStructureProperties {
 
     public int getSpawnRate() {return spawnRate;}
     public int getAbandonedRate() {return abandonedRate;}
-    public int getAbandonLootRate() {return abandonLootRate;}
+    public int getLootAbandonRate() {return abandonLootRate;}
 }

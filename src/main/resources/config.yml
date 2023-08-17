@@ -67,7 +67,10 @@ piglin-spawn-rate: 100
 #Wandering Trader spawn rate.
 wandering-trader-spawn-rate: 100
 
-
+#In order to "abandon" a structure, LiminalMod will sometimes change a structure's blocks. This is the maximum amount of blocks that can be processed per tick.
+#Too high, and the server will try to do a lot at once and lag. Too low, and the structure will take a long time to process, wasting time that could be spent on other things.
+blocks-per-tick: 128
+  #Think of this as trying to fit a Slime through a tunnel, where the tunnel is the server's processing power. One would want to stretch the slime just enough to fit.
 
 
 #worlds this applies to??
