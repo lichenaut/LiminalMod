@@ -26,7 +26,7 @@ public class LMBlockIterator implements Iterator<Block> {
 
     @Override
     public Block next() {
-        if (!hasNext()) throw new NoSuchElementException();// Expected iterator behavior
+        if (!hasNext()) throw new NoSuchElementException();
 
         Block currentBlock = w.getBlockAt(x, y, z);
 

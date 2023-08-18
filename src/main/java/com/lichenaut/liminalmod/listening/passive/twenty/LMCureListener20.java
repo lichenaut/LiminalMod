@@ -1,7 +1,7 @@
 package com.lichenaut.liminalmod.listening.passive.twenty;
 
 import com.lichenaut.liminalmod.LiminalMod;
-import com.lichenaut.liminalmod.util.LMListenerUtil;
+import com.lichenaut.liminalmod.util.LMMiscUtil;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.ZombieVillager;
@@ -10,7 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTransformEvent;
 
-public class LMCureListener20 extends LMListenerUtil implements Listener {
+public class LMCureListener20 extends LMMiscUtil implements Listener {
 
     public LMCureListener20(LiminalMod plugin) {super(plugin);}
 

@@ -11,11 +11,11 @@ import org.bukkit.potion.PotionEffect;
 
 import java.util.Collection;
 
-public class LMListenerUtil {
+public class LMMiscUtil {
 
     protected final LiminalMod plugin;
 
-    public LMListenerUtil(LiminalMod plugin) {this.plugin = plugin;}
+    public LMMiscUtil(LiminalMod plugin) {this.plugin = plugin;}
 
     public boolean chance(int chance) {return Math.random() * 100 < chance;}
 

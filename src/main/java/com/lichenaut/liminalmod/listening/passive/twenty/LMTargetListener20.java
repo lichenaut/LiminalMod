@@ -1,7 +1,7 @@
 package com.lichenaut.liminalmod.listening.passive.twenty;
 
 import com.lichenaut.liminalmod.LiminalMod;
-import com.lichenaut.liminalmod.util.LMListenerUtil;
+import com.lichenaut.liminalmod.util.LMMiscUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -13,11 +13,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
-public class LMTargetListener20 extends LMListenerUtil implements Listener {
+public class LMTargetListener20 extends LMMiscUtil implements Listener {
 
-    private final HashMap<UUID, Long> cooldowns = new HashMap<>();// Minor efficiency improvement to use a cooldown.
+    private final Map<UUID, Long> cooldowns = new HashMap<>();// Minor efficiency improvement to use a cooldown.
 
     public LMTargetListener20(LiminalMod plugin) {super(plugin);}
 

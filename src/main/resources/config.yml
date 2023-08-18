@@ -6,15 +6,13 @@ disable-plugin: false
 #Nerf Structures#
 #################
 
-#Note: read the README for information on how to use this file: (link)
+#Note: read the README for information on how to use this file: https://github.com/lichenaut/LiminalMod/blob/master/README.md
 
 #Example:
 #village-plains:
 #  spawn-rate: 50
 #  abandoned-rate: 75
 #  loot-abandon-rate: 50
-
-#any unsupplied values go to 0
 
 structures:
   ANCIENT_CITY:
@@ -52,9 +50,9 @@ structures:
   VILLAGE_TAIGA:
 
 
-################
-#Miscellaneous##
-################
+###############
+#Miscellaneous#
+###############
 
 #Set patrol spawn rate.
 patrol-spawn-rate: 100
@@ -67,10 +65,19 @@ piglin-spawn-rate: 100
 #Wandering Trader spawn rate.
 wandering-trader-spawn-rate: 100
 
-#In order to "abandon" a structure, LiminalMod will sometimes change a structure's blocks. This is the maximum amount of blocks that can be processed per tick.
+
+###################
+#Abandonment Speed#
+###################
+
+#In order to "abandon" a structure, LiminalMod will sometimes load a structure's chunks to change its blocks.
+#The following settings are as follows:
+  #The maximum amount of blocks that can be processed per tick.
+  #The number of ticks the plugin will wait before loading another chunk.
+#Think of these as trying to fit a Slime through a tunnel, where the tunnel is the server's processing power. One would want to stretch the slime just enough to fit.
+
 #Too high, and the server will try to do a lot at once and lag. Too low, and the structure will take a long time to process, wasting time that could be spent on other things.
-blocks-per-tick: 128
-  #Think of this as trying to fit a Slime through a tunnel, where the tunnel is the server's processing power. One would want to stretch the slime just enough to fit.
+blocks-per-tick: 2048
 
-
-#worlds this applies to??
+#Too low, and the server will try to load a lot of chunks at once and lag. Too high, and the structure will take a long time to process, also wasting time.
+ticks-per-chunk: 5

@@ -1,0 +1,12 @@
+table Location {
+    world:string;
+    x:double;
+    y:double;
+    z:double;
+}
+
+table AbandonmentMarkers {
+    markers:[Location];
+}
+
+root_type AbandonmentMarkers;
