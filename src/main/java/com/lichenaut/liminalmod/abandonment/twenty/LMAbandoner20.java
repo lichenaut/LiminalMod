@@ -25,7 +25,7 @@ public class LMAbandoner20 extends LMAbandoner {
 
     public LMAbandoner20(LiminalMod plugin) {super(plugin);}
 
-    public void nerfLoot(World w, BoundingBox box, int abandonLootRate, int batchSize, boolean hasCarts) {
+    public void nerfLoot(World w, BoundingBox box, int abandonLootRate, int batchSize, Runnable callback) {
         AtomicInteger taskID = new AtomicInteger();
         LMBlockIterator bi = new LMBlockIterator(w, box);
 
@@ -48,15 +48,13 @@ public class LMAbandoner20 extends LMAbandoner {
             }
 
             if (!bi.hasNext()) {
-                if (hasCarts)
-                    w.getNearbyEntities(box).stream().filter(entity -> entity instanceof StorageMinecart).forEach(entity -> nerfInventoryContents(((StorageMinecart) entity).getInventory(), abandonLootRate));
-
                 Bukkit.getScheduler().cancelTask(taskID.get());
+                callback.run();
             }
         }, 0L, 1L));
     }
 
-    private void nerfInventoryContents(Inventory inv, int abandonLootRate) {
+    protected void nerfInventoryContents(Inventory inv, int abandonLootRate) {
         if (inv.isEmpty()) return;
 
         List<ItemStack> items = new ArrayList<>(Arrays.asList(inv.getContents()));
@@ -74,6 +72,10 @@ public class LMAbandoner20 extends LMAbandoner {
         }
     }
 
+    public void nerfMinecartChests(World w, BoundingBox box, int abandonLootRate) {
+        w.getNearbyEntities(box).stream().filter(entity -> entity instanceof StorageMinecart).forEach(entity -> nerfInventoryContents(((StorageMinecart) entity).getInventory(), abandonLootRate));
+    }
+
     public void endCityAbandon(World w, BoundingBox box) {
         w.getNearbyEntities(box).stream().filter(entity -> entity.getType() == EntityType.SHULKER).forEach(Entity::remove);
     }
@@ -86,7 +88,7 @@ public class LMAbandoner20 extends LMAbandoner {
         w.getNearbyEntities(box).stream().filter(entity -> types.contains(entity.getType())).forEach(Entity::remove);
     }
 
-    public void overworldSettlementAbandon(World w, BoundingBox box, int batchSize) {
+    public void overworldSettlementAbandon(World w, BoundingBox box, int batchSize, boolean transformStructure, Runnable callback) {
         for (Entity entity : w.getNearbyEntities(box)) {
             switch (entity.getType()) {
                 case CAT:
@@ -127,7 +129,6 @@ public class LMAbandoner20 extends LMAbandoner {
                     case OAK_LOG:
                     case SPRUCE_LOG:
                         if (isTreeBlock(block)) continue;
-                    case ACACIA_FENCE:
                     case ACACIA_PLANKS:
                     case ACACIA_STAIRS:
                     case BIRCH_PLANKS:
@@ -135,7 +136,6 @@ public class LMAbandoner20 extends LMAbandoner {
                     case DARK_OAK_PLANKS:
                     case DARK_OAK_SLAB:
                     case DARK_OAK_STAIRS:
-                    case OAK_FENCE:
                     case OAK_PLANKS:
                     case OAK_STAIRS:
                     case ORANGE_TERRACOTTA:
@@ -143,12 +143,12 @@ public class LMAbandoner20 extends LMAbandoner {
                     case SANDSTONE_SLAB:
                     case SANDSTONE_STAIRS:
                     case SMOOTH_SANDSTONE:
-                    case SPRUCE_FENCE:
                     case SPRUCE_PLANKS:
                     case SPRUCE_STAIRS:
                     case STRIPPED_ACACIA_LOG:
                     case STRIPPED_OAK_LOG:
                     case STRIPPED_SPRUCE_LOG:
+                    case WHITE_TERRACOTTA:
                         if (chance(10)) block.setType(Material.COBWEB);
                         break;
                     case COBBLESTONE:
@@ -162,7 +162,7 @@ public class LMAbandoner20 extends LMAbandoner {
                         break;
                     case DARK_OAK_FENCE:// "Did the Iron Golems and Allay escape from the outpost?"
                         Material highest = block.getWorld().getHighestBlockAt(block.getLocation()).getType();
-                        if (highest == Material.WHITE_WOOL || highest == Material.HAY_BLOCK) return;
+                        if (highest == Material.WHITE_WOOL || highest == Material.CARVED_PUMPKIN) return;
                         if (escaped) block.setType(Material.AIR); else if (chance(10)) block.setType(Material.COBWEB);
                         break;
                     case GLASS_PANE:
@@ -172,11 +172,14 @@ public class LMAbandoner20 extends LMAbandoner {
                 batchCount++;
             }
 
-            if (!bi.hasNext()) Bukkit.getScheduler().cancelTask(taskID.get());
+            if (!bi.hasNext()) {
+                Bukkit.getScheduler().cancelTask(taskID.get());
+                callback.run();
+            }
         }, 0L, 1L));
     }
 
-    public boolean isTreeBlock(Block b) {
+    protected boolean isTreeBlock(Block b) {
         Block highest = b.getWorld().getHighestBlockAt(b.getLocation());
         return highest.getType() == Material.OAK_LEAVES || highest.getType() == Material.DARK_OAK_LEAVES || highest.getType() == Material.ACACIA_LEAVES || highest.getType() == Material.SPRUCE_LEAVES || highest.getType() == Material.BIRCH_LEAVES || highest.getType() == Material.JUNGLE_LEAVES || highest.getType() == Material.AZALEA_LEAVES || highest.getType() == Material.MANGROVE_LEAVES || highest.getType() == Material.CHERRY_LEAVES;
     }

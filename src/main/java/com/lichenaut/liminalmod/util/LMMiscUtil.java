@@ -100,7 +100,6 @@ public class LMMiscUtil {
         String customName = villager.getName();
         boolean customNameVisible = villager.isCustomNameVisible();
         Collection<PotionEffect> potionEffects = villager.getActivePotionEffects();
-
         villager.remove();
 
         ZombieVillager zombie = (ZombieVillager) w.spawnEntity(villager.getLocation(), EntityType.ZOMBIE_VILLAGER);
@@ -112,5 +111,6 @@ public class LMMiscUtil {
         zombie.addPotionEffects(potionEffects);
         zombie.setPersistent(true);
         zombie.setMetadata("abandoned", new FixedMetadataValue(plugin, true));
+        zombie.spawnAt(villager.getLocation());
     }
 }

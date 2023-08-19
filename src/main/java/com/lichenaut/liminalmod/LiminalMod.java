@@ -1,6 +1,5 @@
 package com.lichenaut.liminalmod;
 
-import com.lichenaut.liminalmod.listening.LMStructureEvent;
 import com.lichenaut.liminalmod.load.LMListenerRegisterer;
 import com.lichenaut.liminalmod.serialization.LMSerialization;
 import org.bukkit.Bukkit;
@@ -13,9 +12,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -24,7 +21,6 @@ public final class LiminalMod extends JavaPlugin {
     private final Logger log = getLogger();
     private final Configuration config = getConfig();
     private List<Location> abandonmentMarkers = new ArrayList<>();
-    private final Queue<LMStructureEvent> structureEvents = new LinkedList<>();//TODO: this is a mess
 
     @Override
     public void onEnable() {
@@ -48,7 +44,7 @@ public final class LiminalMod extends JavaPlugin {
                 try {
                     ByteBuffer serializedData = loadFlatBufferFromFile(new File(getDataFolder(), "abandonmentMarkers.fb"));
                     if (serializedData.capacity() > 0) abandonmentMarkers = LMSerialization.deserializeMarkers(serializedData);
-                } catch (IOException e) {throw new RuntimeException(e);}//TODO: What other classes should be static?
+                } catch (IOException e) {throw new RuntimeException(e);}
 
                 new LMListenerRegisterer(this).registerListeners(versionInt);
             } else log.severe("Unsupported version detected: " + sVersion + "! Disabling plugin.");
@@ -69,7 +65,7 @@ public final class LiminalMod extends JavaPlugin {
         File presetDir = new File(getDataFolder(), "presets");
         if (!presetDir.exists()) presetDir.mkdir();
 
-        String[] resourceFiles = {"lichenauts-rebalance-preset.txt", "post-apoc-preset.txt", "abandonmentMarkers.fb"};
+        String[] resourceFiles = {"rebalance-preset.txt", "isolation-preset.txt", "abandonmentMarkers.fb"};
         for (String resourceFile : resourceFiles) {
             File destination;
             if (resourceFile.equals("abandonmentMarkers.fb")) destination = new File(getDataFolder(), resourceFile); else destination = new File(presetDir, resourceFile);
@@ -95,6 +91,4 @@ public final class LiminalMod extends JavaPlugin {
     public Configuration getPluginConfig() {return config;}
     public List<Location> getAbandonmentMarkers() {return abandonmentMarkers;}
     public void addAbandonmentMarker(Location l) {abandonmentMarkers.add(l);}
-    public Queue<LMStructureEvent> getStructureEvents() {return structureEvents;}
-    public void addStructureEvent(LMStructureEvent e) {structureEvents.add(e);}
 }

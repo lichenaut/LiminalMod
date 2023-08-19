@@ -1,4 +1,4 @@
-package com.lichenaut.liminalmod.listening.passive.twenty;
+package com.lichenaut.liminalmod.listening.twenty.passive;
 
 import com.lichenaut.liminalmod.LiminalMod;
 import com.lichenaut.liminalmod.util.LMMiscUtil;

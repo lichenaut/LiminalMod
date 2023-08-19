@@ -1,4 +1,4 @@
-package com.lichenaut.liminalmod.listening.passive.twenty;
+package com.lichenaut.liminalmod.listening.twenty.passive;
 
 import com.lichenaut.liminalmod.LiminalMod;
 import com.lichenaut.liminalmod.util.LMMiscUtil;
@@ -29,11 +29,11 @@ public class LMSpawnListener20 extends LMMiscUtil implements Listener {
         if (!(spawnReason == CreatureSpawnEvent.SpawnReason.NATURAL || spawnReason == CreatureSpawnEvent.SpawnReason.PATROL)) return;
         switch (e.getEntityType()) {
             case ALLAY:
-                if (foundMarker(e.getLocation(), plugin.getAbandonmentMarkers(), 122)) e.setCancelled(true);
+                if (foundMarker(e.getLocation(), plugin.getAbandonmentMarkers(), 176)) e.setCancelled(true);
                 break;
             case ELDER_GUARDIAN:
             case GUARDIAN:
-                if (foundMarker(e.getLocation(), plugin.getAbandonmentMarkers(), 80)) e.setCancelled(true);
+                if (foundMarker(e.getLocation(), plugin.getAbandonmentMarkers(), 56)) e.setCancelled(true);
                 break;
             case PILLAGER:
                 Location l = e.getLocation();
@@ -45,10 +45,11 @@ public class LMSpawnListener20 extends LMMiscUtil implements Listener {
                         noPatrolMarkers.add(l);
                         Bukkit.getScheduler().runTaskLater(plugin, () -> noPatrolMarkers.remove(l), 4L);
                     }
-                } else if (foundMarker(l, plugin.getAbandonmentMarkers(), 49)) e.setCancelled(true);
+                } else if (foundMarker(l, plugin.getAbandonmentMarkers(), 72))
+                    e.setCancelled(true);
                 break;
             case PIGLIN:
-                if (chance(100 - piglinSpawnRate) || foundMarker(e.getLocation(), plugin.getAbandonmentMarkers(), 94)) e.setCancelled(true);
+                if (chance(100 - piglinSpawnRate) || foundMarker(e.getLocation(), plugin.getAbandonmentMarkers(), 132)) e.setCancelled(true);
                 break;
             case WANDERING_TRADER:
                 if (chance(100 - wanderingTraderSpawnRate)) e.setCancelled(true);
@@ -56,7 +57,7 @@ public class LMSpawnListener20 extends LMMiscUtil implements Listener {
     }
 
     private boolean foundMarker(Location l1, List<Location> ls, int radius) {
-        for (Location l2 : ls) {// TODO: Watch this for performance issues, consider spatial hashing if it's lagging on large lists
+        for (Location l2 : ls) {// Watch this for performance issues, consider spatial hashing if it's lagging on large lists
             if (l1.getWorld() != l2.getWorld()) continue;
             double x = l1.getX() - l2.getX(), z = l1.getZ() - l2.getZ();
             if (x * x + z * z <= radius * radius) {return true;}

@@ -1,10 +1,10 @@
 package com.lichenaut.liminalmod.load;
 
 import com.lichenaut.liminalmod.LiminalMod;
-import com.lichenaut.liminalmod.listening.gen.twenty.LMStructureListener20;
-import com.lichenaut.liminalmod.listening.passive.twenty.LMCureListener20;
-import com.lichenaut.liminalmod.listening.passive.twenty.LMSpawnListener20;
-import com.lichenaut.liminalmod.listening.passive.twenty.LMTargetListener20;
+import com.lichenaut.liminalmod.listening.twenty.gen.LMStructureListener20;
+import com.lichenaut.liminalmod.listening.twenty.passive.LMCureListener20;
+import com.lichenaut.liminalmod.listening.twenty.passive.LMSpawnListener20;
+import com.lichenaut.liminalmod.listening.twenty.passive.LMTargetListener20;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
