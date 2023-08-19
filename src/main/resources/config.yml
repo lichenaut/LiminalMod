@@ -9,7 +9,7 @@ disable-plugin: false
 #Note: read the README for information on how to use this file: https://github.com/lichenaut/LiminalMod/blob/master/README.md
 
 #Example:
-#village-plains:
+#VILLAGE_PLAINS:
 #  spawn-rate: 50
 #  abandoned-rate: 75
 
