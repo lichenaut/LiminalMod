@@ -1,0 +1,99 @@
+#Turn StructureNerfer off.
+disable-plugin: false
+
+#Isolation preset by lichenaut.
+
+#################
+#Nerf Structures#
+#################
+
+structures:
+  ANCIENT_CITY:
+  BASTION_REMNANT:
+    spawn-rate: 50
+    abandoned-rate: 75
+  BURIED_TREASURE:
+  DESERT_PYRAMID:
+  END_CITY:
+    abandoned-rate: 75
+  FORTRESS:
+    spawn-rate: 50
+  IGLOO:
+  JUNGLE_PYRAMID:
+  MANSION:
+    abandoned-rate: 75
+  MINESHAFT:
+  MINESHAFT_MESA:
+  MONUMENT:
+    spawn-rate: 10
+    abandoned-rate: 75
+  OCEAN_RUIN_COLD:
+  OCEAN_RUIN_WARM:
+  PILLAGER_OUTPOST:
+    spawn-rate: 10
+    abandoned-rate: 75
+  RUINED_PORTAL:
+    spawn-rate: 10
+  RUINED_PORTAL_DESERT:
+    spawn-rate: 10
+  RUINED_PORTAL_JUNGLE:
+    spawn-rate: 10
+  RUINED_PORTAL_MOUNTAIN:
+    spawn-rate: 10
+  RUINED_PORTAL_NETHER:
+    spawn-rate: 10
+  RUINED_PORTAL_OCEAN:
+    spawn-rate: 10
+  RUINED_PORTAL_SWAMP:
+    spawn-rate: 10
+  SHIPWRECK:
+    spawn-rate: 25
+  SHIPWRECK_BEACHED:
+    spawn-rate: 25
+  STRONGHOLD:
+  SWAMP_HUT:
+    spawn-rate: 25
+  TRAIL_RUINS:
+  VILLAGE_DESERT:
+    spawn-rate: 10
+    abandoned-rate: 75
+  VILLAGE_PLAINS:
+    spawn-rate: 10
+    abandoned-rate: 75
+  VILLAGE_SAVANNA:
+    spawn-rate: 10
+    abandoned-rate: 75
+  VILLAGE_SNOWY:
+    spawn-rate: 10
+    abandoned-rate: 75
+  VILLAGE_TAIGA:
+    spawn-rate: 10
+    abandoned-rate: 75
+
+
+###############
+#Miscellaneous#
+###############
+
+#Set patrol spawn rate.
+patrol-spawn-rate: 1
+
+#Set Piglin spawn rate.
+  #Does not change the piglin count limit, only changes the rate at which the count grows.
+piglin-spawn-rate: 1
+  #Consider also editing spawn limits, spawn ranges, and spawn timings in your server's files: "bukkit.yml", "spigot.yml", and "paper.yml", etc...
+
+#Wandering Trader spawn rate.
+wandering-trader-spawn-rate: 1
+
+
+###################
+#Abandonment Speed#
+###################
+
+#In order to "abandon" a structure, LiminalMod will sometimes load a structure's chunks.
+#The following setting is the amount of time, in ticks, this plugin will wait before loading another chunk.
+#Think of this as trying to fit a Slime through a tunnel, where the tunnel is the server's processing power. One would want to stretch the slime just enough to fit.
+
+#Too low, and the server will try to load a lot of chunks at once and lag. Too high, and the structure will take a long time to process, also wasting time.
+ticks-per-chunk: 10
