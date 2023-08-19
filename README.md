@@ -1,5 +1,5 @@
 # LiminalMod
-LiminalMod allows for configurable structure spawning, restoring old Minecraft's atmosphere.
+LiminalMod allows for configurable structure spawning, restoring old Minecraft's atmosphere. PaperSpigot only!
 
 [![Github All Releases](https://img.shields.io/github/downloads/lichenaut/LiminalMod/total.svg)]()
 
